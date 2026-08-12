@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+
+  /* COLORES */
+
+  /* Base*/
+  
+  --color-background: #edf0f3; /* gris claro - fondo general app */
+  --color-surface: #ffffff; /* blanco - cards, modals */
+  --color-surface-muted: #edf0f3; /* gris suave - fondo inputs */
+  --color-muted: #e2e2e2; /* gris neutro - bordes, tablas */
+
+  /* Identidad */ 
+  
+  --color-primary: #193251; /* azul oscuro */
+  --color-primary-hover: #144784; /* azul medio */
+  --color-neutral: #b1b1b1; /* gris*/
+
+  /* Estados */
+
+  --color-danger: #fe5353; /* rojo - errores */
+
+  --color-warning: #ffa100; /* naranja - alertas */
+  --color-success: #068131; /* verde - éxito */
+
+  /*Texto*/
+
+  --color-foreground: #ffffff; /* texto principal */
+  --color-foreground-muted:#000000 ; /* texto secundario */
+
+  /* TIPOGRAFIA */
+  --font-sans: 'DM Sans', sans-serif;
+}

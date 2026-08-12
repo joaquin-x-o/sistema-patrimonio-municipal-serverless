@@ -1,0 +1,1 @@
+export type DateFilterOptions = "EXACT" | "BEFORE" | "AFTER";

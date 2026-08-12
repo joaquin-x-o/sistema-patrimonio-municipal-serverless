@@ -1,0 +1,9 @@
+export { default as CreateProduct } from './CreateProduct';
+export { default as DeleteProduct } from './DeleteProduct';
+export { default as EditProduct } from './EditProduct';
+export { default as EditProductStatus } from './EditProductStatus';
+export { default as RepairProduct } from './RepairProduct';
+export { default as RetireProduct } from './RetireProduct';
+export { default as ReviewProduct } from './ReviewProduct';
+export { default as TransferProduct } from './TransferProduct';
+export { default as UnusuableProduct } from './UnusuableProduct';
