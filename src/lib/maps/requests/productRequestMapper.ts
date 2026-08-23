@@ -1,11 +1,16 @@
 import type { CreateProductDto, LostProductDto, RepairProductDto, RetireProductDto, TransferProductDto, UnusableProductDto, UpdateProductDto } from "../../../interfaces/requests/productRequests";
 import type { CreateProductRequest, LostProductRequest, MarkProductUnusableRequest, RepairProductRequest, RetireProductRequest, TransferProductRequest, UpdateProductRequest } from "../../../schemas/product.schemas";
 import { ProductStatus, type ProductCategory, type ProductCondition } from "../../../types/product.type";
+import { parseNumericInput } from "../../../utils/common/priceFormatters";
 import { getTodayDateISO } from "../../../utils/date/getTodayDate";
 
-export const mapCreateProductRequestToDto = (dto: CreateProductRequest, departmentId: number, userId: string): CreateProductDto => {
+export const mapCreateProductRequestToDto = (dto: CreateProductRequest, departmentId: number): CreateProductDto => {
 
     const today = getTodayDateISO()
+
+    const purchasePrice = parseNumericInput(dto.purchasePrice)
+    const depreciation = parseNumericInput(dto.depreciation)
+
 
     return {
         code: Number(dto.productCode),
@@ -20,7 +25,9 @@ export const mapCreateProductRequestToDto = (dto: CreateProductRequest, departme
         last_check_date: today,
         status_updated_at: today,
         department_id: departmentId,
-        user_id: userId,
+        invoice_number: dto.invoiceNumber ?? null,
+        purchase_price: purchasePrice ?? null,
+        depreciation: depreciation ?? null,
     };
 };
 
@@ -39,7 +46,7 @@ export const mapUpdateProductRequestToDto = (dto: UpdateProductRequest): UpdateP
     };
 };
 
-export const mapTransferProductRequestToDto = (dto: TransferProductRequest, productId: number, destinationDepartmentId: number, userId: string): TransferProductDto => {
+export const mapTransferProductRequestToDto = (dto: TransferProductRequest, productId: number, destinationDepartmentId: number): TransferProductDto => {
 
     const today = getTodayDateISO()
     return {
@@ -47,7 +54,6 @@ export const mapTransferProductRequestToDto = (dto: TransferProductRequest, prod
         p_destination_department_id: destinationDepartmentId,
         p_date: dto.transferDate ?? today,
         p_reason: dto.reasonForMovement,
-        p_user_id: userId,
     };
 
 }
@@ -59,7 +65,7 @@ export const mapUnusuableProductRequesToDto = (dto: MarkProductUnusableRequest):
     }
 }
 
-export const mapRepairProductRequestToDto = (dto: RepairProductRequest, productId: number, userId: string): RepairProductDto => {
+export const mapRepairProductRequestToDto = (dto: RepairProductRequest, productId: number): RepairProductDto => {
 
     const today = getTodayDateISO()
 
@@ -69,11 +75,10 @@ export const mapRepairProductRequestToDto = (dto: RepairProductRequest, productI
         p_repair_description: dto.repairDescription,
         p_cost: dto.cost ? Number(dto.cost) : null,
         p_repair_date: dto.repairDate || today,
-        p_user_id: userId
     };
 }
 
-export const mapMarkProductAsLostToDto = (dto: LostProductRequest, productId: number, userId: string): LostProductDto => {
+export const mapMarkProductAsLostToDto = (dto: LostProductRequest, productId: number): LostProductDto => {
 
     const today = getTodayDateISO()
 
@@ -83,11 +88,10 @@ export const mapMarkProductAsLostToDto = (dto: LostProductRequest, productId: nu
         p_date: dto.lossDate || today,
         p_type: dto.lossType,
         p_details: dto.lossDetails || "",
-        p_user_id: userId
     };
 }
 
-export const mapRetireProductToDto = (dto: RetireProductRequest, productId: number, userId: string): RetireProductDto => {
+export const mapRetireProductToDto = (dto: RetireProductRequest, productId: number): RetireProductDto => {
     const today = getTodayDateISO()
 
     return {
@@ -96,6 +100,5 @@ export const mapRetireProductToDto = (dto: RetireProductRequest, productId: numb
         p_reason: dto.unusableReason,
         p_date: dto.retirementDate || today,
         p_type: dto.retirementType,
-        p_user_id: userId
     };
 }

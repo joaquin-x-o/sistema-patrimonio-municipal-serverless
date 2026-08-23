@@ -64,9 +64,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(userData);
     };
 
+    // const logout = async () => {
+
+    //     if (user) {
+    //         await signOut(user.username);
+    //     }
+    //     setUser(null);
+    // };
+
     const logout = async () => {
         if (user) {
-            await signOut(user.id, user.username);
+            await signOut();
         }
         setUser(null);
     };

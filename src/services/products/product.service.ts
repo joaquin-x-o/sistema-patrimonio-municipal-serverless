@@ -152,15 +152,15 @@ export const getProductCountByCondition = async (): Promise<ConditionCountRespon
 // ACCIONES ---------------------
 
 // crear producto
-export const createProduct = async (userId: string, dto: CreateProductRequest) => {
+export const createProduct = async (dto: CreateProductRequest) => {
     const departmentId = await getDepartmentId(dto.departmentCode);
-    const product = mapCreateProductRequestToDto(dto, departmentId, userId);
+    const product = mapCreateProductRequestToDto(dto, departmentId);
 
     try {
         const created = await createProductDb(product);
         const response = mapProductRowToShortResponse(created);
 
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.CREATE_PRODUCT,
             entityType: LogEntityType.PRODUCT,
             entityCode: dto.productCode,
@@ -184,7 +184,7 @@ export const createProduct = async (userId: string, dto: CreateProductRequest) =
 };
 
 // actualizar producto
-export const updateProduct = async (userId: string, productCode: number, request: UpdateProductRequest) => {
+export const updateProduct = async (productCode: number, request: UpdateProductRequest) => {
     const productId = await getProductId(productCode);
 
     const product = await getProductByCode(String(productCode));
@@ -199,7 +199,7 @@ export const updateProduct = async (userId: string, productCode: number, request
         const hasChanges = Object.keys(newData).length > 0;
 
         if (hasChanges) {
-            await createLog(userId, {
+            await createLog({
                 action: LogActionType.EDIT_PRODUCT,
                 entityType: LogEntityType.PRODUCT,
                 entityCode: String(productCode),
@@ -219,7 +219,7 @@ export const updateProduct = async (userId: string, productCode: number, request
 };
 
 // mandar producto a revision
-export const reviewProduct = async (userId: string, productCode: string, request: ReviewProductRequest): Promise<boolean> => {
+export const reviewProduct = async (productCode: string, request: ReviewProductRequest): Promise<boolean> => {
 
     const product = await getProductByCode(productCode);
 
@@ -232,7 +232,7 @@ export const reviewProduct = async (userId: string, productCode: string, request
     const hasBeenReviewed = await sendProductToReviewDb(productId, request);
 
     if (hasBeenReviewed) {
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.REVIEW_PRODUCT,
             entityType: LogEntityType.PRODUCT,
             entityCode: productCode,
@@ -249,7 +249,7 @@ export const reviewProduct = async (userId: string, productCode: string, request
 };
 
 // aprobar revision
-export const approveReview = async (userId: string, productCode: string): Promise<boolean> => {
+export const approveReview = async (productCode: string): Promise<boolean> => {
     const product = await getProductByCode(productCode);
 
     if (product.status !== "IN_REVIEW") {
@@ -261,7 +261,7 @@ export const approveReview = async (userId: string, productCode: string): Promis
     const hasBeenApproved = await approveReviewDb(productId);
 
     if (hasBeenApproved) {
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.APPROVE_PRODUCT_REVIEW,
             entityType: LogEntityType.PRODUCT,
             entityCode: productCode,
@@ -280,7 +280,7 @@ export const approveReview = async (userId: string, productCode: string): Promis
 
 
 // transferir producto
-export const transferProduct = async (productCode: string, userId: string, request: TransferProductRequest) => {
+export const transferProduct = async (productCode: string, request: TransferProductRequest) => {
     const product = await getProductByCode(productCode);
     const productId = await getProductId(Number(productCode));
 
@@ -298,12 +298,11 @@ export const transferProduct = async (productCode: string, userId: string, reque
         request,
         productId,
         destinationDepartmentId,
-        userId
     );
 
     const updated = await transferProductDb(data);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.TRANSFER_PRODUCT,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -323,7 +322,7 @@ export const transferProduct = async (productCode: string, userId: string, reque
 };
 
 // marcar producto como averiado
-export const markAsUnusable = async (userId: string, productCode: string, request: MarkProductUnusableRequest) => {
+export const markAsUnusable = async (productCode: string, request: MarkProductUnusableRequest) => {
     const product = await getProductByCode(productCode);
 
     if (product.status === "UNUSABLE") {
@@ -337,7 +336,7 @@ export const markAsUnusable = async (userId: string, productCode: string, reques
 
     const response = mapProductRowToShortResponse(updated);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.MARK_PRODUCT_AS_UNUSABLE,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -354,7 +353,7 @@ export const markAsUnusable = async (userId: string, productCode: string, reques
 };
 
 // reparar producto
-export const repairProduct = async (productCode: string, userId: string, request: RepairProductRequest) => {
+export const repairProduct = async (productCode: string, request: RepairProductRequest) => {
     const product = await getProductByCode(productCode);
 
     if (product.status !== ProductStatus.UNUSABLE) {
@@ -362,12 +361,12 @@ export const repairProduct = async (productCode: string, userId: string, request
     }
 
     const productId = await getProductId(Number(productCode));
-    const data = mapRepairProductRequestToDto(request, productId, userId);
+    const data = mapRepairProductRequestToDto(request, productId);
 
     const updated = await repairProductDb(data);
     const response = mapProductRowToShortResponse(updated);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.REPAIR_PRODUCT,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -386,7 +385,7 @@ export const repairProduct = async (productCode: string, userId: string, request
 };
 
 // marcar producto como perdido
-export const markProductAsLost = async (productCode: string, userId: string, request: LostProductRequest) => {
+export const markProductAsLost = async (productCode: string, request: LostProductRequest) => {
     const product = await getProductByCode(productCode);
 
     if (product.status === "LOST") {
@@ -394,11 +393,11 @@ export const markProductAsLost = async (productCode: string, userId: string, req
     }
 
     const productId = await getProductId(Number(productCode));
-    const data = mapMarkProductAsLostToDto(request, productId, userId);
+    const data = mapMarkProductAsLostToDto(request, productId);
 
     const updated = await markProductAsLostDb(data);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.MARK_PRODUCT_AS_LOST,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -415,7 +414,7 @@ export const markProductAsLost = async (productCode: string, userId: string, req
 };
 
 // marcar producto como encontrado
-export const markProductAsFound = async (userId: string, productCode: string): Promise<boolean> => {
+export const markProductAsFound = async (productCode: string): Promise<boolean> => {
     const product = await getProductByCode(productCode);
 
     if (product.status !== "LOST") {
@@ -427,7 +426,7 @@ export const markProductAsFound = async (userId: string, productCode: string): P
 
     const updated = await markProductAsFoundDb(productId);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.MARK_PRODUCT_AS_FOUND,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -448,7 +447,7 @@ export const markProductAsFound = async (userId: string, productCode: string): P
 
 
 // dar de baja producto
-export const retireProduct = async (productCode: string, userId: string, request: RetireProductRequest) => {
+export const retireProduct = async (productCode: string, request: RetireProductRequest) => {
     const product = await getProductByCode(productCode);
 
     if (product.status === "RETIRED") {
@@ -456,11 +455,11 @@ export const retireProduct = async (productCode: string, userId: string, request
     }
 
     const productId = await getProductId(Number(productCode));
-    const data = mapRetireProductToDto(request, productId, userId);
+    const data = mapRetireProductToDto(request, productId);
 
     const updated = await retireProductDb(data);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.RETIRE_PRODUCT,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -477,10 +476,7 @@ export const retireProduct = async (productCode: string, userId: string, request
 };
 
 // habilitar producto dado de baja
-export const enableProduct = async (
-    productCode: string,
-    userId: string
-): Promise<boolean> => {
+export const enableProduct = async (productCode: string): Promise<boolean> => {
     const product = await getProductByCode(productCode);
 
     if (product.status === ProductStatus.ACTIVE) {
@@ -491,7 +487,7 @@ export const enableProduct = async (
 
     const updated = await enableProductDb(productId);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.ENABLE_PRODUCT,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -512,7 +508,7 @@ export const enableProduct = async (
 
 
 // constatar producto
-export const checkProductExistence = async (userId: string, productCode: string): Promise<boolean> => {
+export const checkProductExistence = async (productCode: string): Promise<boolean> => {
     const productId = await getProductId(Number(productCode));
 
     const oldData = await getProductLastCheckDateDb(productId);
@@ -521,7 +517,7 @@ export const checkProductExistence = async (userId: string, productCode: string)
     const updated = await checkProductExistenceDb(productId);
     const newLastCheckDate = updated.last_check_date;
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.CHECK_PRODUCT,
         entityType: LogEntityType.PRODUCT,
         entityCode: productCode,
@@ -534,7 +530,7 @@ export const checkProductExistence = async (userId: string, productCode: string)
 };
 
 // borrar producto (hard delete)
-export const deleteProduct = async (userId: string, productCode: number) => {
+export const deleteProduct = async (productCode: number) => {
     const product = await getProductByCode(String(productCode));
 
     const productId = await getProductId(productCode);
@@ -542,7 +538,7 @@ export const deleteProduct = async (userId: string, productCode: number) => {
     try {
         await deleteProductDb(productId);
 
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.DELETE_PRODUCT,
             entityType: LogEntityType.PRODUCT,
             entityCode: String(productCode),

@@ -2,9 +2,9 @@ import type { CreateUserRequest } from "../../../../schemas/user.schemas";
 import { createUser } from "../../../../services/users/user.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, data: CreateUserRequest) {
+function action(data: CreateUserRequest) {
     try {
-        return createUser(userId, data);
+        return createUser(data);
     } catch (err) {
         if (err instanceof Error && err.message === "El nombre de usuario ya está en uso") {
             throw err;

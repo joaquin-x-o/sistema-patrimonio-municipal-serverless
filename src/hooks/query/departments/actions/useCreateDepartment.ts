@@ -2,8 +2,8 @@ import type { CreateDepartmentRequest } from "../../../../schemas/department.sch
 import { createDepartment } from "../../../../services/departments/department.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, data: CreateDepartmentRequest) {
-    return createDepartment(userId, data);
+function action(data: CreateDepartmentRequest) {
+    return createDepartment(data);
 }
 
 export const useCreateDepartment = () => {

@@ -35,7 +35,7 @@ export const getProductsDb = async ({ category, condition, status, dateMode, dat
         `, { count: 'exact' })
         .neq('status', 'RETIRED')
         .range(from, to)
-        .order('created_at', { ascending: false });
+        .order('product_id', { ascending: false })
 
     // filtros
     if (category) query = query.eq('category', category);
@@ -107,7 +107,11 @@ export const getProductByCodeDb = async (code: number) => {
             created_at,
             updated_at,
             department ( code, name ),
-            user ( name, surname )
+            user ( name, surname ),
+            invoice_number,
+            purchase_price,
+            depreciation,
+            quantity
         `)
         .eq('code', code)
         .single();

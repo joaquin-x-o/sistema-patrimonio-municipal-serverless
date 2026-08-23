@@ -16,7 +16,7 @@ import { InputWithAction } from "../../../ui/Input/InputWithButton";
 import { HelpButton } from "../../../ui/Button/HelpButton";
 import { SelectInput } from "../../../ui/Input/SelectInput";
 import { useFormOptions } from "../../../../hooks/forms/useFormSelectOptions";
-import { useAuth } from "../../../../hooks/auth/useAuth";
+import { formatPrice } from "../../../../utils/common/priceFormatters";
 
 interface Props {
     productData: ProductResponse;
@@ -25,7 +25,6 @@ interface Props {
 }
 
 export function EditProductForm({ productData, onSuccess, onBack }: Props) {
-    const { user } = useAuth()
     const { updateProduct } = useUpdateProduct();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -40,6 +39,11 @@ export function EditProductForm({ productData, onSuccess, onBack }: Props) {
             productCode: String(productData.productCode),
             category: productData.category,
             physicalCondition: productData.physicalCondition,
+            invoiceNumber: productData.invoiceNumber ?? "",
+            purchasePrice: formatPrice(productData.purchasePrice) !== null && productData.purchasePrice !== undefined ? formatPrice(productData.purchasePrice).toString() : "",
+
+            depreciation: formatPrice(productData.depreciation) !== null && productData.depreciation !== undefined ? formatPrice(productData.depreciation).toString()
+                : "",
             registrationDate: formatCalendarDateForInput(productData.registrationDate),
         }
     });
@@ -51,7 +55,7 @@ export function EditProductForm({ productData, onSuccess, onBack }: Props) {
         await submit({
             logLabel: "editar producto",
             action: async () => {
-                const updatedProduct = await updateProduct(user!.id, productData.productCode, data);
+                const updatedProduct = await updateProduct(productData.productCode, data);
                 return updatedProduct.productCode;
             },
             onSuccess: (newProductCode) => onSuccess(newProductCode),
@@ -130,6 +134,34 @@ export function EditProductForm({ productData, onSuccess, onBack }: Props) {
                     error={errors.physicalCondition?.message}
                 />
             </FormField>
+
+            <FormField label="Número de factura">
+                <Input
+                    {...register("invoiceNumber")}
+                    placeholder="Ej: 0067-00060676"
+                    error={errors.invoiceNumber?.message}
+                    disabled={loading}
+                />
+            </FormField>
+
+            <FormField label="Valor">
+                <Input
+                    {...register("purchasePrice")}
+                    placeholder="Ej: 125.000,00"
+                    error={errors.purchasePrice?.message}
+                    disabled={loading}
+                />
+            </FormField>
+
+            <FormField label="Depreciación">
+                <Input
+                    {...register("depreciation")}
+                    placeholder="Ej: 125.000,00"
+                    error={errors.depreciation?.message}
+                    disabled={loading}
+                />
+            </FormField>
+
 
             <FormField label="Fecha de registro">
                 <Input type="date" {...register("registrationDate")} error={errors.registrationDate?.message} disabled={loading} />

@@ -14,7 +14,6 @@ import { PasswordToggleButton } from "../../../ui/Button/PasswordToggleButton";
 import { InputWithAction } from "../../../ui/Input/InputWithButton";
 import { SelectInput } from "../../../ui/Input/SelectInput";
 import { useFormOptions } from "../../../../hooks/forms/useFormSelectOptions";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     onSuccess: (code: string) => void;
@@ -22,7 +21,6 @@ interface Props {
 }
 
 export function CreateUserForm({ onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { createUser } = useCreateUser();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -42,7 +40,7 @@ export function CreateUserForm({ onSuccess, onBack }: Props) {
     const onSubmit = async (data: CreateUserRequest) => {
         await submit({
             logLabel: "crear usuario",
-            action: () => createUser(user!.id, data),
+            action: () => createUser(data),
             onSuccess: (result) => onSuccess(result.username),
             setFormFieldError: (field, error) => setError(field as any, error),
             fieldErrors: [

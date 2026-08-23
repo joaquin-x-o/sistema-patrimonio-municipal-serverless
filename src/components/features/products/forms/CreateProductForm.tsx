@@ -54,7 +54,7 @@ export function CreateProductForm({ onSuccess, onBack }: Props) {
 
         await submit({
             logLabel: "crear producto",
-            action: () => createProduct(data, user.id),
+            action: () => createProduct(data),
             onSuccess: () => onSuccess(data.productCode!),
             setFormFieldError: (field, error) => setError(field as any, error),
             fieldErrors: [
@@ -149,6 +149,33 @@ export function CreateProductForm({ onSuccess, onBack }: Props) {
 
                 <FormField label="Observaciones" align="start">
                     <Textarea {...register("observation")} placeholder="..." error={errors.observation?.message} rows={4} />
+                </FormField>
+
+                <FormField label="Número de factura">
+                    <Input
+                        {...register("invoiceNumber")}
+                        placeholder="Ej: 0067-00060676"
+                        error={errors.invoiceNumber?.message}
+                        disabled={loading}
+                    />
+                </FormField>
+
+                <FormField label="Valor">
+                    <Input
+                        {...register("purchasePrice")}
+                        placeholder="Ej: 125.000,00"
+                        error={errors.purchasePrice?.message}
+                        disabled={loading}
+                    />
+                </FormField>
+
+                <FormField label="Depreciación">
+                    <Input
+                        {...register("depreciation")}
+                        placeholder="Ej: 125.000,00"
+                        error={errors.depreciation?.message}
+                        disabled={loading}
+                    />
                 </FormField>
 
                 <FormField label="Fecha de registro">

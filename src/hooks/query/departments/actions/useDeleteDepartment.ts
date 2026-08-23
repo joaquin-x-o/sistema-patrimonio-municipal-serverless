@@ -1,8 +1,8 @@
 import { deleteDepartment } from "../../../../services/departments/department.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, departmentCode: string) {
-    return deleteDepartment(userId, departmentCode);
+function action(departmentCode: string) {
+    return deleteDepartment(departmentCode);
 }
 
 export const useDeleteDepartment = () => {

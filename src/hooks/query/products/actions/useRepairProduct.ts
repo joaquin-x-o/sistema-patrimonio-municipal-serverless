@@ -10,7 +10,7 @@ export const useRepairProduct = () => {
         if (!user) {
             throw new Error("No hay un usuario autenticado para registrar la reparación.");
         }
-        return repairProduct(productCode, user.id, request);
+        return repairProduct(productCode, request);
     }
 
     const { execute, loading, error, setError } = useAsyncMutation(

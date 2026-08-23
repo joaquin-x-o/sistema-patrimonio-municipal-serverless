@@ -63,7 +63,7 @@ export default function Topbar() {
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Buscar producto..."
-                            startIcon={<Search size={18} />} // Le pasamos la lupa directo acá
+                            startIcon={<Search size={18} />}
                             className="rounded-full!"
                             onFocus={() => setIsFocused(true)}
                             onBlur={() => setTimeout(() => setIsFocused(false), 200)}

@@ -69,7 +69,10 @@ const formatEditProduct = (data: JsonData): string => {
         productCode: "Código",
         category: "Categoría",
         physicalCondition: "Condición",
-        registrationDate: "Fecha de alta"
+        registrationDate: "Fecha de alta",
+        invoiceNumber: "Facturación",
+        purchasePrice: "Valor",
+        depreciation: "Depreciación"
     };
 
     const parts = Object.entries(data).map(([key, val]) => {

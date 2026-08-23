@@ -1,11 +1,11 @@
-import { getLogDescription } from "../../lib/logMessage/logDescriptions";
+// import { getLogDescription } from "../../lib/logMessage/logDescriptions";
 import { mapUserRowToResponse } from "../../lib/maps/responses/userResponseMapper";
 import { signInDb, signOutDb, updatePasswordDb } from "../../repositories/auth/auth.repository";
 import { getUserByUsernameDb } from "../../repositories/user/user.repository";
 import type { ChangePasswordRequest } from "../../schemas/user.schemas";
-import { LogActionType, LogEntityType } from "../../types/log.type";
+// import { LogActionType, LogEntityType } from "../../types/log.type";
 import { normalizeUsername } from "../../utils/user/normalizeUsername";
-import { createLog } from "../logHistory/logHistory.service";
+// import { createLog } from "../logHistory/logHistory.service";
 
 // login
 export const signIn = async (username: string, password: string) => {
@@ -30,12 +30,12 @@ export const signIn = async (username: string, password: string) => {
 
     const user = mapUserRowToResponse(userData)
 
-    await createLog(user.id, {
-        action: LogActionType.LOGIN,
-        entityType: LogEntityType.USER,
-        entityCode: userLowercase,
-        description: getLogDescription(LogActionType.LOGIN, userLowercase)
-    });
+    // await createLog({
+    //     action: LogActionType.LOGIN,
+    //     entityType: LogEntityType.USER,
+    //     entityCode: userLowercase,
+    //     description: getLogDescription(LogActionType.LOGIN, userLowercase)
+    // });
 
     return {
         user: user
@@ -43,16 +43,27 @@ export const signIn = async (username: string, password: string) => {
 };
 
 // logout
-export const signOut = async (userId: string, username: string) => {
-    await createLog(userId, {
-        action: LogActionType.LOGOUT,
-        entityType: LogEntityType.USER,
-        entityCode: username,
-        description: getLogDescription(LogActionType.LOGOUT, username)
-    });
+export const signOut = async () => {
+    // await createLog({
+    //     action: LogActionType.LOGOUT,
+    //     entityType: LogEntityType.USER,
+    //     entityCode: username,
+    //     description: getLogDescription(LogActionType.LOGOUT, username)
+    // });
 
     await signOutDb();
 };
+
+// export const signOut = async (username: string) => {
+//     // await createLog({
+//     //     action: LogActionType.LOGOUT,
+//     //     entityType: LogEntityType.USER,
+//     //     entityCode: username,
+//     //     description: getLogDescription(LogActionType.LOGOUT, username)
+//     // });
+
+//     await signOutDb();
+// };
 
 // cambiar contraseña
 export const changePassword = async (username: string, data: ChangePasswordRequest): Promise<boolean> => {

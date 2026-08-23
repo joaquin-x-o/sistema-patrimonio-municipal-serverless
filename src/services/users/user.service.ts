@@ -45,7 +45,7 @@ export const getUserList = async (): Promise<UserLightResponse[]> => {
 // ACCIONES -------------
 
 // crear usuario
-export const createUser = async (userId: string, request: CreateUserRequest) => {
+export const createUser = async (request: CreateUserRequest) => {
     const usernameLowerCase = normalizeUsername(request.username);
 
     const exists = await checkUsernameExistsDb(usernameLowerCase);
@@ -59,7 +59,7 @@ export const createUser = async (userId: string, request: CreateUserRequest) => 
     try {
         const createdUser = await createUserDb(userDto);
 
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.CREATE_USER,
             entityType: LogEntityType.USER,
             entityCode: createdUser.username,
@@ -84,7 +84,7 @@ export const createUser = async (userId: string, request: CreateUserRequest) => 
 };
 
 // actualizar usuario
-export const updateUser = async (currentUserId: string, username: string, request: UpdateUserRequest) => {
+export const updateUser = async (username: string, request: UpdateUserRequest) => {
 
     const id = await getUserId(username);
 
@@ -100,7 +100,7 @@ export const updateUser = async (currentUserId: string, username: string, reques
         const hasChanges = Object.keys(newData).length > 0;
 
         if (hasChanges) {
-            await createLog(currentUserId, {
+            await createLog({
                 action: LogActionType.EDIT_USER,
                 entityType: LogEntityType.USER,
                 entityCode: username,
@@ -140,7 +140,7 @@ export const enableUser = async (username: string, currentUserId: string) => {
 
     const enabledUser = await enableUserDB(targetUserId);
 
-    await createLog(currentUserId, {
+    await createLog({
         action: LogActionType.ENABLE_USER,
         entityType: LogEntityType.USER,
         entityCode: username,
@@ -174,7 +174,7 @@ export const disableUser = async (username: string, currentUserId: string) => {
 
     const disabledUser = await disableUserDB(userId);
 
-    await createLog(currentUserId, {
+    await createLog({
         action: LogActionType.DISABLE_USER,
         entityType: LogEntityType.USER,
         entityCode: username,
@@ -206,7 +206,7 @@ export const deleteUser = async (username: string, currentUserId: string) => {
     try {
         await deleteUserDb(userId);
 
-        await createLog(currentUserId, {
+        await createLog({
             action: LogActionType.DELETE_USER,
             entityType: LogEntityType.USER,
             entityCode: username,

@@ -16,6 +16,7 @@ import { Card } from "../../components/ui/Common/Card";
 import { LoadingContainer } from "../../components/ui/Feedback/LoadingContainer";
 import { useProduct } from "../../hooks/query/products/useProduct";
 import { useProductHistoryMeta } from "../../hooks/query/products/useCheckProductHistory";
+import { formatPrice } from "../../utils/common/priceFormatters";
 
 const reportLinks = (productCode: string) => [
     { key: "maintenance", label: "Reportes de mantenimiento", to: `/reportes/mantenimiento/${productCode}` },
@@ -43,8 +44,8 @@ export default function ProductDetails() {
 
 
     const productStatus = productDetails?.status ?? ProductStatus.ACTIVE;
-    const productCategory = productDetails?.category ?? ProductCategory.OTHER;
-    const productCondition = productDetails?.physicalCondition ?? ProductCondition.NEW;
+    const productCategory = productDetails?.category;
+    const productCondition = productDetails?.physicalCondition;
     const needsCheckReview = productDetails?.needsCheckReview;
 
     let productReason = "";
@@ -54,6 +55,7 @@ export default function ProductDetails() {
     } else if (productStatus === ProductStatus.UNUSABLE) {
         productReason = productDetails?.unusableReason as string ?? "Motivo de desuso no especificado.";
     }
+
 
     const hasStatusReason = !!productReason;
 
@@ -81,8 +83,12 @@ export default function ProductDetails() {
                     <InfoField label="Código" value={productDetails?.productCode} />
                     <InfoField label="Descripción" value={productDetails?.description} />
                     <InfoField label="Observación" value={productDetails?.observation} />
-                    <InfoField label="Categoría" value={categoryTranslations[productCategory]} />
-                    <InfoField label="Condición" value={conditionTranslations[productCondition]} />
+                    <InfoField label="Categoría" value={productCategory ? categoryTranslations[productCategory as ProductCategory] : "No especificada"} />
+                    <InfoField label="Condición" value={productCondition ? conditionTranslations[productCondition as ProductCondition] : "No especificada"} />
+                    <InfoField label="Factura" value={productDetails?.invoiceNumber ?? "No especificada"} />
+                    <InfoField label="Valor" value={formatPrice(productDetails?.purchasePrice) ?? "No especificado"} />
+                    <InfoField label="Depreciación" value={formatPrice(productDetails?.depreciation) ?? "No especificada"} />
+                    <InfoField label="Cantidad" value={productDetails?.quantity ?? "No especificada"} />
                     <InfoField label="Registrado en" value={formatCalendarDateAR(productDetails?.registrationDate)} />
                 </DetailCard>,
 
@@ -112,7 +118,7 @@ export default function ProductDetails() {
                                     <hr className="border-t border-muted my-4" />
                                     <ProductStatusOptions
                                         productCode={productCode as string}
-                                        productStatus={productStatus}
+                                        productStatus={productStatus as ProductStatus}
                                         onActionSuccess={refetch}
                                     />
                                 </div>
@@ -121,7 +127,7 @@ export default function ProductDetails() {
                     }
 
                 >
-                    <InfoField label="Estado" value={<ProductBadgeStatus status={productStatus} />} />
+                    <InfoField label="Estado" value={<ProductBadgeStatus status={productStatus as ProductStatus} />} />
                     <InfoField label="Desde" value={formatDateAR(productDetails?.statusUpdatedAt)} />
 
                 </DetailCard>,

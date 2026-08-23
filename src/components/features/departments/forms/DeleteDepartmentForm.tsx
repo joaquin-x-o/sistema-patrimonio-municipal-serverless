@@ -7,7 +7,6 @@ import { Input } from "../../../ui/Input/Input";
 import { useDeleteDepartment } from "../../../../hooks/query/departments/actions/useDeleteDepartment";
 import { getSubmitText } from "../../../../utils/common/getSubmitText";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     departmentData: DepartmentResponse;
@@ -16,7 +15,6 @@ interface Props {
 }
 
 export function DeleteDepartmentForm({ departmentData, onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { deleteDepartment } = useDeleteDepartment();
 
     const { submit, loading, error } = useFormSubmitHandler();
@@ -27,7 +25,7 @@ export function DeleteDepartmentForm({ departmentData, onSuccess, onBack }: Prop
 
         await submit({
             logLabel: "eliminar área",
-            action: () => deleteDepartment(user!.id, departmentData.departmentCode),
+            action: () => deleteDepartment(departmentData.departmentCode),
             onSuccess: () => onSuccess()
         });
     };

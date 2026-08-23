@@ -29,6 +29,10 @@ export interface ProductResponse {
     lastCheckDate: string | null;
     pendingReviewReason: string | null;
 
+    invoiceNumber: string | null;
+    purchasePrice: number | null;
+    depreciation: number | null;
+
     createdAt: string;
     updatedAt: string;
 

@@ -38,7 +38,7 @@ export default function DepartmentDetails() {
     const dateMode = searchParams.get("modoFecha") as DateFilterOptions || undefined;
     const dateValue = searchParams.get("fecha") || undefined;
 
-    const { department: departmentDetails, products, total: productTotal, totalPages, error, loading } = useDepartment({ departmentCode, page: currentPage, limit: 10, category, condition, status, dateMode, dateValue });
+    const { department: departmentDetails, products, total: productTotal, totalPages, error, loading } = useDepartment({ departmentCode, page: currentPage, limit: 20, category, condition, status, dateMode, dateValue });
 
     const departmentStatus = departmentDetails?.isActive;
 

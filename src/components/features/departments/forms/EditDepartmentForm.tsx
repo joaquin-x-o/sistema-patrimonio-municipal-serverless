@@ -9,7 +9,6 @@ import { useUpdateDepartment } from "../../../../hooks/query/departments/actions
 import { getSubmitText } from "../../../../utils/common/getSubmitText";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
 import { FormResetButton } from "../../../ui/Button/FormResetButton";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     departmentData: DepartmentResponse;
@@ -18,7 +17,6 @@ interface Props {
 }
 
 export function EditDepartmentForm({ departmentData, onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { updateDepartment } = useUpdateDepartment();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -38,7 +36,7 @@ export function EditDepartmentForm({ departmentData, onSuccess, onBack }: Props)
 
         await submit({
             logLabel: "actualizar área",
-            action: () => updateDepartment(user!.id, departmentData.departmentCode, dataRequest),
+            action: () => updateDepartment(departmentData.departmentCode, dataRequest),
             onSuccess: (updatedDepartment) => onSuccess(updatedDepartment.departmentCode),
             setFormFieldError: (field, error) => setError(field as any, error),
             fieldErrors: [

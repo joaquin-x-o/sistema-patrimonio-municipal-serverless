@@ -10,7 +10,6 @@ import { useReviewProduct } from "../../../../hooks/query/products/actions/useRe
 import { getSubmitText } from "../../../../utils/common/getSubmitText";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
 import { FormResetButton } from "../../../ui/Button/FormResetButton";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     productData: ProductResponse;
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export function ReviewProductForm({ productData, onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { reviewProduct } = useReviewProduct();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -35,7 +33,7 @@ export function ReviewProductForm({ productData, onSuccess, onBack }: Props) {
     const onSubmit = async (data: ReviewProductRequest) => {
         await submit({
             logLabel: "mandar producto a revisión",
-            action: () => reviewProduct(user!.id, String(productData.productCode), data),
+            action: () => reviewProduct(String(productData.productCode), data),
             onSuccess: () => onSuccess(data.pendingReviewReason!)
         });
     };

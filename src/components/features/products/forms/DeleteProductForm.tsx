@@ -10,7 +10,6 @@ import { Form } from "../../../ui/Forms/Form";
 import { useDeleteProduct } from "../../../../hooks/query/products/actions/useDeleteProduct";
 import { getSubmitText } from "../../../../utils/common/getSubmitText";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     productData: ProductResponse;
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export function DeleteProductForm({ productData, onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { deleteProduct } = useDeleteProduct();
 
     const { submit, loading, error } = useFormSubmitHandler();
@@ -34,7 +32,7 @@ export function DeleteProductForm({ productData, onSuccess, onBack }: Props) {
 
         await submit({
             logLabel: "eliminar producto",
-            action: () => deleteProduct(user!.id, productData.productCode),
+            action: () => deleteProduct(productData.productCode),
             onSuccess: () => onSuccess()
         });
     };

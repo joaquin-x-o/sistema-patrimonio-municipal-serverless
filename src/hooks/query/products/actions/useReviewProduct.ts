@@ -2,8 +2,8 @@ import type { ReviewProductRequest } from "../../../../schemas/product.schemas";
 import { reviewProduct } from "../../../../services/products/product.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, productCode: string, request: ReviewProductRequest) {
-    return reviewProduct(userId, productCode, request);
+function action(productCode: string, request: ReviewProductRequest) {
+    return reviewProduct(productCode, request);
 }
 
 export const useReviewProduct = () => {

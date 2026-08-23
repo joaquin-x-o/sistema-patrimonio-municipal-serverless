@@ -34,7 +34,10 @@ export const ProductColumnNames: ColumnDef<ProductShortResponse>[] = [
     {
         header: "Condición",
         accessorKey: "physicalCondition",
-        cell: (row) => conditionTranslations[row.physicalCondition] || row.physicalCondition
+        cell: (row) =>
+            conditionTranslations[row.physicalCondition] ||
+            row.physicalCondition ||
+            "No especificado"
     },
     {
         header: "Fecha de registro",

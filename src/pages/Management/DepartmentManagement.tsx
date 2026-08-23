@@ -20,7 +20,7 @@ export default function DepartmentManagement() {
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { data: departments, total: departmentsTotal, totalPages: departmentsTotalPages, loading: departmentsLoading } = useDepartments({ page: currentPage, limit: 10 });
+    const { data: departments, total: departmentsTotal, totalPages: departmentsTotalPages, loading: departmentsLoading } = useDepartments({ page: currentPage, limit: 60 });
     const { data: departmentProductCounts, loading: departmentProductCountsLoading } = useDepartmentProductCountStats(3);
 
     const actions: ButtonGroupAction[] = [

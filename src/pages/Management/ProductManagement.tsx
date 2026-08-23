@@ -60,7 +60,13 @@ export default function ProductManagement() {
                 const dateMode = searchParams.get("modoFecha") as DateFilterOptions || undefined;
                 const dateValue = searchParams.get("fecha") || undefined;
 
-                const response = await getProducts({ category, condition, status, dateMode, dateValue, page: currentPage, limit: 10 });
+                const response = await getProducts({ category, condition, status, dateMode, dateValue, page: currentPage, limit: 20 });
+
+                console.log("PAGE:", currentPage);
+                console.log(
+                    "PRODUCTS:",
+                    response.data?.map(p => p.productCode)
+                );
 
                 setData(response.data ?? []);
                 setTotalItems(response.total);
@@ -91,7 +97,7 @@ export default function ProductManagement() {
                     {productsByCondition.map(({ physicalCondition, count }) => (
                         <Bar
                             key={physicalCondition}
-                            label={conditionTranslations[physicalCondition]}
+                            label={conditionTranslations[physicalCondition] ?? physicalCondition}
                             value={count}
                             max={totalProducts}
                         />

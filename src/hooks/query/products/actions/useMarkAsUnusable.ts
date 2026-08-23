@@ -2,8 +2,8 @@ import type { MarkProductUnusableRequest } from "../../../../schemas/product.sch
 import { markAsUnusable } from "../../../../services/products/product.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, productCode: string, request: MarkProductUnusableRequest) {
-    return markAsUnusable(userId, productCode, request);
+function action(productCode: string, request: MarkProductUnusableRequest) {
+    return markAsUnusable(productCode, request);
 }
 
 export const useMarkProductUnusable = () => {

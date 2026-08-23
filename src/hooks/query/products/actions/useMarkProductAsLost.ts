@@ -1,16 +1,11 @@
-import { useAuth } from "../../../auth/useAuth";
 import type { LostProductRequest } from "../../../../schemas/product.schemas";
 import { markProductAsLost } from "../../../../services/products/product.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
 export const useLostProduct = () => {
-    const { user } = useAuth();
 
     function action(productCode: string, request: LostProductRequest) {
-        if (!user) {
-            throw new Error("No hay un usuario autenticado para realizar el reporte de pérdida.");
-        }
-        return markProductAsLost(productCode, user.id, request);
+        return markProductAsLost(productCode, request);
     }
 
     const { execute, loading, error, setError } = useAsyncMutation(

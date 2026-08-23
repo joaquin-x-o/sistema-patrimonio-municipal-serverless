@@ -13,7 +13,6 @@ export const createLogDb = async (dto: CreateLogDto) => {
             old_data: dto.oldData ?? null,
             new_data: dto.newData ?? null,
             timestamp: new Date().toISOString(),
-            user_id: dto.userId
         });
 
     if (error) throw new Error(error.message);

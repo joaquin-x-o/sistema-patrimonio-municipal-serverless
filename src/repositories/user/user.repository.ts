@@ -1,4 +1,4 @@
-import { supabase, supabaseAuthAdmin } from "../../lib/supabase";
+import { supabase } from "../../lib/supabase";
 import type { PaginationParams } from "../../interfaces/params/paginationParams";
 import { handleSingleError } from "../../utils/supabase/handleError";
 import type { CreateUserDto, UpdateUserDto } from "../../interfaces/requests/userRequests";
@@ -73,40 +73,16 @@ export const getUserId = async (username: string) => {
 
 // crear usuario
 export const createUserDb = async (dto: CreateUserDto) => {
-    const genericEmail = `${dto.username.trim()}@interno.local`;
-
-    // creacion de usuario en Auth de Supabase mediante el cliente auxiliar
-    const { data: authData, error: authError } = await supabaseAuthAdmin.auth.signUp({
-        email: genericEmail,
-        password: dto.password,
-        options: {
-            data: { username: dto.username.trim() }
-        }
+    const { data, error } = await supabase.functions.invoke('create-user', {
+        body: dto
     });
 
-    if (authError) throw authError;
-    if (!authData.user) throw new Error("No se pudo generar la credencial de autenticación.");
+    if (error) {
+        throw new Error(`Error de conexión: ${error.message}`);
+    }
 
-    const today = getTodayDateISO();
-
-    // asignacion y retorno de datos a la tabla pública de usuarios
-    const { data, error: publicError } = await supabase
-        .from('user')
-        .insert({
-            id: authData.user.id,
-            name: dto.name.trim(),
-            surname: dto.surname.trim(),
-            username: dto.username.trim().toLowerCase(),
-            role: dto.role,
-            is_active: true,
-            created_at: today,
-            updated_at: today
-        })
-        .select()
-        .single();
-
-    if (publicError) {
-        throw publicError;
+    if (data && data.error) {
+        throw new Error(data.error);
     }
 
     return data;

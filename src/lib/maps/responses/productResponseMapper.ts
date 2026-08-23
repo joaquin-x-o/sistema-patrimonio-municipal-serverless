@@ -1,4 +1,5 @@
-import type { ConditionCountResponse, ProductLightResponse, ProductResponse, ProductShortResponse } from "../../../interfaces/responses/productResponses";
+import type { ConditionCountResponse, ProductLightResponse, ProductShortResponse } from "../../../interfaces/responses/productResponses";
+import type { ProductResponse } from "../../../schemas/product.schemas";
 import { calculateReviewDaysPending } from "../../../utils/product/calculateReviewDaysPending";
 import { shouldBeChecked } from "../../../utils/product/shouldBeChecked";
 
@@ -51,7 +52,11 @@ export const mapProductRowToFullResponse = (data: any): ProductResponse => {
         user: {
             name: usr?.name,
             surname: usr?.surname
-        }
+        },
+        invoiceNumber: data.invoice_number,
+        purchasePrice: data.purchase_price,
+        depreciation: data.depreciation,
+        quantity: data.quantity
     };
 };
 

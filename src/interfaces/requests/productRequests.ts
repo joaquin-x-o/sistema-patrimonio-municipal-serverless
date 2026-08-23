@@ -13,7 +13,9 @@ export interface CreateProductDto {
     status: ProductStatus;
     status_updated_at: string;
     department_id: number;
-    user_id: string;
+    invoice_number: string | null;
+    purchase_price: number | null;
+    depreciation: number | null;
 }
 
 export interface UpdateProductDto {
@@ -41,7 +43,6 @@ export interface TransferProductDto {
     p_destination_department_id: number;
     p_date: string;
     p_reason: string;
-    p_user_id: string;
 }
 
 export interface RepairProductDto {
@@ -50,7 +51,6 @@ export interface RepairProductDto {
     p_repair_description: string;
     p_cost: number | null;
     p_repair_date: string;
-    p_user_id: string;
 }
 
 
@@ -60,7 +60,6 @@ export interface LostProductDto {
     p_date: string;
     p_type: string;
     p_details: string;
-    p_user_id: string;
 }
 
 export interface RetireProductDto {
@@ -69,5 +68,4 @@ export interface RetireProductDto {
     p_reason: string;
     p_date: string;
     p_type: string;
-    p_user_id: string;
 }

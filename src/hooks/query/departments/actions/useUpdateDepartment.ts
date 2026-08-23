@@ -2,8 +2,8 @@ import { updateDepartment } from "../../../../services/departments/department.se
 import type { UpdateDepartmentRequest } from "../../../../schemas/department.schemas";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, departmentCode: string, request: UpdateDepartmentRequest) {
-    return updateDepartment(userId, departmentCode, request);
+function action(departmentCode: string, request: UpdateDepartmentRequest) {
+    return updateDepartment(departmentCode, request);
 }
 
 export const useUpdateDepartment = () => {

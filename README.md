@@ -43,7 +43,7 @@ Sigue estos pasos para clonar y ejecutar el proyecto en tu entorno local:
 
 1. **Clonar el repositorio:**
 ```bash
-   git clone https://github.com/joaquin-x-o/sistema-patrimonio-municipal-serverless.git
+   git clone https://github.com/joaquin-x-o/sistema-patrimonio-serverless-prod.git
 ```
 
 2. **Navegar al directorio del proyecto e instalar dependencias:**

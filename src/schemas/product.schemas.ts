@@ -25,6 +25,12 @@ export const createProductSchema = z.object({
     registrationDate: z.string().optional(),
     status: z.enum(Object.values(ProductStatus) as [string, ...string[]]).optional(),
     pendingReviewReason: z.string().optional(),
+
+    invoiceNumber: z.string()
+    .regex(/^(\d+(-\d+)?)?$/, "La factura solo puede contener números y guiones (ej: 20320 o 30031-3232)")
+    .optional(),
+    purchasePrice: z.string().regex(/^(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?$/, "El precio debe tener un formato válido (ej: 15.000,50)").optional(),
+    depreciation: z.string().regex(/^(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?$/, "El precio debe tener un formato válido (ej: 15.000,50)").optional(),
 });
 
 // editar producto
@@ -36,6 +42,18 @@ export const updateProductSchema = z.object({
     category: z.enum(Object.values(ProductCategory) as [string, ...string[]]).optional(),
     physicalCondition: z.enum(Object.values(ProductCondition) as [string, ...string[]]).optional(),
     registrationDate: z.string().optional(),
+    invoiceNumber: z.string()
+    .regex(/^(\d+(-\d+)?)?$/, "La factura solo puede contener números y guiones (ej: 20320 o 30031-3232)")
+    .optional(),
+    purchasePrice: z.string()
+    .regex(/^(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?$/, "El precio debe tener un formato válido (ej: 15.000,50)")
+    .or(z.literal(''))
+    .optional(),
+    
+    depreciation: z.string()
+    .regex(/^(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?$/, "El precio debe tener un formato válido (ej: 15.000,50)")
+    .or(z.literal(''))
+    .optional(),
 });
 
 // marcar producto como en desuso
@@ -48,7 +66,7 @@ export const markProductUnusableSchema = z.object({
 export const repairProductSchema = z.object({
     physicalCondition: z.enum(Object.values(ProductCondition) as [string, ...string[]], "Debe indicar la nueva condición física del producto"),
     repairDescription: z.string().min(1, "Debe indicar una descripción de la reparación realizada"),
-    cost: z.string().regex(/^\d*$/, "El costo solo puede contener números").optional(),
+    cost: z.string().regex(/^(?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?$/, "El costo debe tener un formato válido (ej: 15.000,50)").optional(),
     repairDate: z.string().optional(),
 });
 
@@ -126,6 +144,11 @@ export const ProductResponseSchema = z.object({
     needsCheckReview: z.boolean(),
     lastCheckDate: z.string().nullable(),
     pendingReviewReason: z.string().nullable(),
+
+    invoiceNumber: z.string().nullable(),
+    purchasePrice: z.string().nullable(),
+    depreciation: z.string().nullable(),
+    quantity: z.number().nullable(),
 
     createdAt: z.string(),
     updatedAt: z.string(),

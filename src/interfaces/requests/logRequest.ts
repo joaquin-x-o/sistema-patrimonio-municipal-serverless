@@ -7,5 +7,4 @@ export interface CreateLogDto {
     description: string;
     oldData?: Record<string, unknown> | null;
     newData?: Record<string, unknown> | null;
-    userId: string;
 }

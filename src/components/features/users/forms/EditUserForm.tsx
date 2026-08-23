@@ -12,7 +12,6 @@ import { FormResetButton } from "../../../ui/Button/FormResetButton";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
 import { SelectInput } from "../../../ui/Input/SelectInput";
 import { useFormOptions } from "../../../../hooks/forms/useFormSelectOptions";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     userData: UserResponse;
@@ -22,7 +21,6 @@ interface Props {
 
 export function EditUserForm({ userData, onSuccess, onBack }: Props) {
 
-    const { user } = useAuth()
     const { updateUser } = useUpdateUser();
     const { submit, loading, error: apiError, setError: setGlobalError } = useFormSubmitHandler();
 
@@ -43,7 +41,7 @@ export function EditUserForm({ userData, onSuccess, onBack }: Props) {
     const onSubmit = async (data: UpdateUserRequest) => {
         await submit({
             logLabel: "editar usuario",
-            action: () => updateUser(user!.id, userData.username, data),
+            action: () => updateUser(userData.username, data),
             onSuccess: (updatedUser) => onSuccess(updatedUser.username),
             setFormFieldError: (field, error) => setError(field as any, error),
             fieldErrors: [

@@ -9,7 +9,6 @@ import { useCreateDepartment } from "../../../../hooks/query/departments/actions
 import { getSubmitText } from "../../../../utils/common/getSubmitText";
 import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandler";
 import { FormResetButton } from "../../../ui/Button/FormResetButton";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     onSuccess: (code: string) => void;
@@ -17,7 +16,6 @@ interface Props {
 }
 
 export function CreateDepartmentForm({ onSuccess, onBack }: Props) {
-    const { user } = useAuth();
     const { createDepartment } = useCreateDepartment();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -30,7 +28,7 @@ export function CreateDepartmentForm({ onSuccess, onBack }: Props) {
     const onSubmit = async (data: CreateDepartmentRequest) => {
         await submit({
             logLabel: "crear área",
-            action: () => createDepartment(user!.id, data),
+            action: () => createDepartment(data),
             onSuccess: () => onSuccess(data.departmentCode),
             setFormFieldError: (field, error) => setError(field as any, error),
             fieldErrors: [

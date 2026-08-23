@@ -5,9 +5,9 @@ import { createLogDb, getLastLogDb, getLogsDb, getTotalLogsDb } from "../../repo
 
 
 // registrar un nuevo log de auditoria
-export const createLog = async (userId: string, params: CreateLogParams) => {
+export const createLog = async (params: CreateLogParams) => {
     try {
-        await createLogDb({ ...params, userId });
+        await createLogDb(params);
     } catch (err) {
         console.error('Error al crear el log:', err);
     }

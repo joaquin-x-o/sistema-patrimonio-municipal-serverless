@@ -1,5 +1,6 @@
 import type { ColumnDef } from "../../../interfaces/columnDef";
 import type { MaintenanceHistoryResponse } from "../../../interfaces/responses/maintenanceHistoryResponse";
+import { formatPrice } from "../../../utils/common/priceFormatters";
 import { formatCalendarDateAR } from "../../../utils/date/formattedDate";
 
 
@@ -25,7 +26,7 @@ export const MaintenanceHistoryColumnNames: ColumnDef<MaintenanceHistoryResponse
     {
         header: "Costo",
         accessorKey: "cost",
-        cell: (row) => `$${row.cost}`
+        cell: (row) => `$${formatPrice(row.cost)}`
     },
     {
         header: "Registrado por",

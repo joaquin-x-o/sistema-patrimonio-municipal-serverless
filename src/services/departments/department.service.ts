@@ -68,13 +68,13 @@ export const getDepartmentProductCountStats = async (limit: number) => {
 // ACCIONES -------------------------------
 
 // crear area
-export const createDepartment = async (userId: string, request: CreateDepartmentRequest) => {
+export const createDepartment = async (request: CreateDepartmentRequest) => {
     const dto = mapCreateDepartmentRequestToDto(request);
 
     try {
         const createdDepartment = await createDepartmentDb(dto);
 
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.CREATE_DEPARTMENT,
             entityType: LogEntityType.DEPARTMENT,
             entityCode: createdDepartment.code,
@@ -99,7 +99,7 @@ export const createDepartment = async (userId: string, request: CreateDepartment
 };
 
 // actualizar area
-export const updateDepartment = async (userId: string, departmentCode: string, request: UpdateDepartmentRequest) => {
+export const updateDepartment = async (departmentCode: string, request: UpdateDepartmentRequest) => {
 
     const departmentId = await getDepartmentId(departmentCode);
     const department = await getDepartmentByCode(departmentCode);
@@ -114,7 +114,7 @@ export const updateDepartment = async (userId: string, departmentCode: string, r
         const hasChanges = Object.keys(newData).length > 0;
 
         if (hasChanges) {
-            await createLog(userId, {
+            await createLog({
                 action: LogActionType.EDIT_DEPARTMENT,
                 entityType: LogEntityType.DEPARTMENT,
                 entityCode: departmentCode,
@@ -140,7 +140,7 @@ export const updateDepartment = async (userId: string, departmentCode: string, r
 
 
 // habilitar area
-export const enableDepartment = async (userId: string, departmentCode: string) => {
+export const enableDepartment = async (departmentCode: string) => {
     const departmentId = await getDepartmentId(departmentCode);
     const department = await getDepartmentByCode(departmentCode);
 
@@ -150,7 +150,7 @@ export const enableDepartment = async (userId: string, departmentCode: string) =
 
     const enabledDepartment = await enableDepartmentDB(departmentId);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.ENABLE_DEPARTMENT,
         entityType: LogEntityType.DEPARTMENT,
         entityCode: departmentCode,
@@ -170,7 +170,7 @@ export const enableDepartment = async (userId: string, departmentCode: string) =
 };
 
 // deshabilitar area
-export const disableDepartment = async (userId: string, departmentCode: string) => {
+export const disableDepartment = async (departmentCode: string) => {
     const departmentId = await getDepartmentId(departmentCode);
     const department = await getDepartmentByCode(departmentCode);
 
@@ -180,7 +180,7 @@ export const disableDepartment = async (userId: string, departmentCode: string) 
 
     const disabledDepartment = await disableDepartmentDB(departmentId);
 
-    await createLog(userId, {
+    await createLog({
         action: LogActionType.DISABLE_DEPARTMENT,
         entityType: LogEntityType.DEPARTMENT,
         entityCode: departmentCode,
@@ -201,7 +201,7 @@ export const disableDepartment = async (userId: string, departmentCode: string) 
 
 
 // borrar area (hard delete)
-export const deleteDepartment = async (userId: string, departmentCode: string) => {
+export const deleteDepartment = async (departmentCode: string) => {
 
     const departmentId = await getDepartmentId(departmentCode);
     const department = await getDepartmentByCode(departmentCode);
@@ -209,7 +209,7 @@ export const deleteDepartment = async (userId: string, departmentCode: string) =
     try {
         await deleteDepartmentDb(departmentId);
 
-        await createLog(userId, {
+        await createLog({
             action: LogActionType.DELETE_DEPARTMENT,
             entityType: LogEntityType.DEPARTMENT,
             entityCode: departmentCode,

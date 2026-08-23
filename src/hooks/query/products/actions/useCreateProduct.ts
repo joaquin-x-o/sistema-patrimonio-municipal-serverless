@@ -2,8 +2,8 @@ import type { CreateProductRequest } from "../../../../schemas/product.schemas";
 import { createProduct } from "../../../../services/products/product.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(data: CreateProductRequest, userId: string) {
-    return createProduct(userId, data);
+function action(data: CreateProductRequest) {
+    return createProduct(data);
 }
 
 export const useCreateProduct = () => {

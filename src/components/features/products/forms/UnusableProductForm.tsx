@@ -12,7 +12,6 @@ import { useFormSubmitHandler } from "../../../../hooks/forms/useFormSubmitHandl
 import { FormResetButton } from "../../../ui/Button/FormResetButton";
 import { useFormOptions } from "../../../../hooks/forms/useFormSelectOptions";
 import { SelectInput } from "../../../ui/Input/SelectInput";
-import { useAuth } from "../../../../hooks/auth/useAuth";
 
 interface Props {
     productData: ProductResponse;
@@ -21,7 +20,6 @@ interface Props {
 }
 
 export function UnusableProductForm({ productData, onSuccess, onBack }: Props) {
-    const { user } = useAuth()
     const { markUnusable } = useMarkProductUnusable();
 
     const { submit, loading, error, setError: setGlobalError } = useFormSubmitHandler();
@@ -41,7 +39,7 @@ export function UnusableProductForm({ productData, onSuccess, onBack }: Props) {
     const onSubmit = async (data: MarkProductUnusableRequest) => {
         await submit({
             logLabel: "marcar producto en desuso",
-            action: () => markUnusable(user!.id, String(productData.productCode), data),
+            action: () => markUnusable(String(productData.productCode), data),
             onSuccess: () => onSuccess(data.unusableReason!)
         });
     };

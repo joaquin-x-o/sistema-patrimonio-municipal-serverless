@@ -1,8 +1,8 @@
 import { deleteProduct } from "../../../../services/products/product.service";
 import { useAsyncMutation } from "../../../common/useAsyncMutation";
 
-function action(userId: string, productId: number) {
-    return deleteProduct(userId!, productId);
+function action(productId: number) {
+    return deleteProduct(productId);
 }
 
 export const useDeleteProduct = () => {
