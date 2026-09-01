@@ -9,6 +9,7 @@ import { createLog } from "../logHistory/logHistory.service";
 import { LogActionType, LogEntityType } from "../../types/log.type";
 import { getLogDescription } from "../../lib/logMessage/logDescriptions";
 import { buildLogDiff } from "../../utils/logUtils/buildLogDiff";
+import { mapDepartmentsForExport } from "../../lib/maps/excel/mapDepartmentForExport";
 
 interface DepartmentProductCountStatsDb {
     code: string;
@@ -39,6 +40,18 @@ export const getDepartments = async ({ page = 1, limit = 10 }: PaginationParams)
 
 };
 
+// obtener todas las áreas para exportar a excel (sin paginacion)
+export const getAllDepartmentsForExport = async () => {
+  const allDepartments = await getDepartmentsDb();
+  const totalProducts = allDepartments.reduce((sum, d) => sum + Number(d.product_count), 0);
+
+  const mapped: DepartmentResponse[] = allDepartments.map(d =>
+    mapDepartmentWithCountRowToResponse(d, totalProducts)
+  );
+
+  const exportableData = mapDepartmentsForExport(mapped);
+  return exportableData;
+} 
 
 // obtener area por codigo
 export const getDepartmentByCode = async (code: string) => {

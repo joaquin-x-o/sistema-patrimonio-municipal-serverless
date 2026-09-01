@@ -1,3 +1,5 @@
+import type { MaintenanceExportRow } from "../../interfaces/responses/maintenanceHistoryResponse";
+import { fetchAllPaginated } from "../../lib/excel/fetchAllPaginated";
 import { supabase } from "../../lib/supabase";
 import { getProductId } from "../products/products.repository";
 
@@ -70,4 +72,27 @@ export const hasMaintenanceHistoryDb = async (productId: number): Promise<boolea
 
     if (error) throw error;
     return data.length > 0;
+};
+
+export const getMaintenanceHistoryForExportDb = async (productCode: number) => {
+  const productId = await getProductId(productCode);
+
+  return fetchAllPaginated<MaintenanceExportRow>(async (from, to) => {
+    const { data, error } = await supabase
+      .from('maintenance_history')
+      .select(`
+        repair_date,
+        repair_description,
+        unusable_date,
+        breakdown_reason,
+        cost,
+        user ( name, surname )
+      `)
+      .eq('product_id', productId)
+      .order('repair_date', { ascending: false })
+      .range(from, to);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as MaintenanceExportRow[];
+  });
 };

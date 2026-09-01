@@ -7,6 +7,7 @@ import { SidebarHeader } from "./SidebarHeader";
 import { SidebarDangerButton } from "./SideBarDangerButton";
 import { SidebarMenu } from "./SidebarMenu";
 import { useSidebar } from "./SidebarProvider";
+import { SidebarExcelButton } from "./SidebarExcelButton";
 
 
 // PROPS
@@ -54,5 +55,6 @@ Sidebar.Menu = SidebarMenu;
 Sidebar.Item = SidebarItem;
 Sidebar.Trigger = SidebarTrigger;
 Sidebar.Content = SidebarContent;
+Sidebar.ExcelButton = SidebarExcelButton;
 Sidebar.DangerButton = SidebarDangerButton;
 Sidebar.Footer = SidebarFooter;

@@ -21,9 +21,9 @@ import { TableCard } from "../../components/ui/Cards/TableCard";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
 import { ProductFilters } from "../../components/features/products/ProductFilters";
 
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { getProducts } from "../../services/products/product.service";
 import { useProductCountByCondition } from "../../hooks/query/products/useProductCountByCondition";
+import { useExportProducts } from "../../hooks/query/products/actions/useExportProducts";
 
 export default function ProductManagement() {
     const { user } = useAuth();
@@ -40,7 +40,10 @@ export default function ProductManagement() {
     const { ref: tableRef, scrollToRef } = useScrollToRef<HTMLDivElement>();
 
     const { data: productsByCondition, loading: conditionLoading } = useProductCountByCondition();
+    const { handleExportExcel, isExporting } = useExportProducts();
+
     const totalProducts = productsByCondition.reduce((total, item) => total + item.count, 0);
+    const tableIsEmpty = !data || data.length === 0;
 
     useEffect(() => {
         if (!loading && shouldScroll) {
@@ -131,7 +134,12 @@ export default function ProductManagement() {
                     }}
                 />
             }
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+
+            floatingAction={
+                !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
         />
     );
 }

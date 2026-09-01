@@ -5,7 +5,6 @@ import { DetailCard } from "../../components/ui/Cards/DetailCard";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { TableCard } from "../../components/ui/Cards/TableCard";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { ProductColumnNames } from "../../components/features/products/ProductColumnNames";
 import { DepartmentBadgeStatus } from "../../components/features/departments/DepartmentBadgeStatus";
 import { getStatusRoute } from "../../utils/common/getStatusRoute";
@@ -18,6 +17,7 @@ import type { DateFilterOptions } from "../../types/dataFilterOptions.type";
 import type { ProductCategory, ProductCondition, ProductStatus } from "../../types/product.type";
 import { LoadingContainer } from "../../components/ui/Feedback/LoadingContainer";
 import { formatDateAR } from "../../utils/date/formattedDate";
+import { useExportDepartmentProducts } from "../../hooks/query/departments/actions/useExportDepartmentProducts";
 
 export default function DepartmentDetails() {
     const { departmentCode } = useParams<{ departmentCode: string }>();
@@ -39,6 +39,9 @@ export default function DepartmentDetails() {
     const dateValue = searchParams.get("fecha") || undefined;
 
     const { department: departmentDetails, products, total: productTotal, totalPages, error, loading } = useDepartment({ departmentCode, page: currentPage, limit: 20, category, condition, status, dateMode, dateValue });
+    const { handleExportExcel, isExporting } = useExportDepartmentProducts(departmentCode ?? "");
+
+    const tableIsEmpty = !products || products.length === 0;
 
     const departmentStatus = departmentDetails?.isActive;
 
@@ -106,7 +109,12 @@ export default function DepartmentDetails() {
                 />,
             ]}
 
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+            floatingAction={
+                isAdmin && !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
+
         />
     );
 }

@@ -7,12 +7,12 @@ import { TableCard } from "../../components/ui/Cards/TableCard";
 import { DepartmentNameFormat } from "../../components/features/departments/DepartmentNameFormat";
 import { Bar } from "../../components/ui/DataDisplay/BarGraph";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { DepartmentColumnNames } from "../../components/features/departments/DepartmentColumnNames";
 import { useAuth } from "../../hooks/auth/useAuth";
 import { UserRole } from "../../types/user.type";
 import { useDepartmentProductCountStats } from "../../hooks/query/stats/useDepartmentProductCountStats";
 import { useDepartments } from "../../hooks/query/departments/useDepartments";
+import { useExportDepartments } from "../../hooks/query/departments/actions/useExportDepartment";
 
 export default function DepartmentManagement() {
     const { user } = useAuth();
@@ -21,6 +21,7 @@ export default function DepartmentManagement() {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data: departments, total: departmentsTotal, totalPages: departmentsTotalPages, loading: departmentsLoading } = useDepartments({ page: currentPage, limit: 60 });
+    const { handleExportExcel, isExporting: isExportingExcel } = useExportDepartments();
     const { data: departmentProductCounts, loading: departmentProductCountsLoading } = useDepartmentProductCountStats(3);
 
     const actions: ButtonGroupAction[] = [
@@ -67,7 +68,7 @@ export default function DepartmentManagement() {
                     }}
                 />
             }
-            floatingAction={< ExcelButton onClick={handleExportExcel} />}
+            floatingAction={< ExcelButton onClick={handleExportExcel} isLoading={isExportingExcel} />}
         />
     );
 }

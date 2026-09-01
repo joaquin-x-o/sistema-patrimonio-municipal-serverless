@@ -1,8 +1,9 @@
 // retirementHistory.service.ts
 import type { GetRetirementReportsParams } from "../../interfaces/params/retirementParams";
-import { getLastRetirementReportDb, getRetirementReportsDb, getTotalRetirementsByYearDb, getTotalRetirementsDb } from "../../repositories/retirementHistory/retirementHistory.repository";
+import { getLastRetirementReportDb, getRetirementReportsDb, getRetirementReportsForExportDb, getTotalRetirementsByYearDb, getTotalRetirementsDb } from "../../repositories/retirementHistory/retirementHistory.repository";
 import { mapRetirementRowReportToResponse } from "../../lib/maps/responses/reportResponseMapper";
 import type { RetirementHistoryResponse } from "../../interfaces/responses/retirementHistoryResponse";
+import { mapRetirementsForExport } from "../../lib/maps/excel/mapRetirementReportForExport";
 
 // obtener los registros de bajas de productos con paginacion 
 export const getRetirementReports = async (params: GetRetirementReportsParams = {}) => {
@@ -33,4 +34,9 @@ export const getLastRetirementReport = async (): Promise<RetirementHistoryRespon
     } catch {
         return null;
     }
+};
+
+export const getRetirementsForExport = async () => {
+  const retirements = await getRetirementReportsForExportDb();
+  return mapRetirementsForExport(retirements);
 };

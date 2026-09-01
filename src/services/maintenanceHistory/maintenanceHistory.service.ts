@@ -1,7 +1,8 @@
 import type { MaintenanceHistoryResponse } from "../../interfaces/responses/maintenanceHistoryResponse";
+import { mapMaintenanceForExport } from "../../lib/maps/excel/mapMaintenanceReportForExcel";
 import { mapProductRowToLightResponse } from "../../lib/maps/responses/productResponseMapper";
 import { mapMaintenanceRowReportToResponse } from "../../lib/maps/responses/reportResponseMapper";
-import { getMaintenanceHistoryByCodeDb, getLastMaintenanceByCodeDb, getMaintenanceProductListDb } from "../../repositories/maintenanceHistory/maintenanceHistory.repository";
+import { getMaintenanceHistoryByCodeDb, getLastMaintenanceByCodeDb, getMaintenanceProductListDb, getMaintenanceHistoryForExportDb } from "../../repositories/maintenanceHistory/maintenanceHistory.repository";
 import type { ProductLightResponse } from "../../schemas/product.schemas";
 
 // obtener mantenimiento de un producto
@@ -40,4 +41,9 @@ export const getMaintenanceProductList = async (): Promise<ProductLightResponse[
     const productList = (data ?? []).map(mapProductRowToLightResponse)
 
     return productList;
+};
+
+export const getMaintenanceForExportService = async (productCode: number) => {
+  const records = await getMaintenanceHistoryForExportDb(productCode);
+  return mapMaintenanceForExport(records);
 };

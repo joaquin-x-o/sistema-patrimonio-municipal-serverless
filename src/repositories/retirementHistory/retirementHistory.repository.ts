@@ -1,5 +1,7 @@
 // retirementHistory.repository.ts
 import type { GetRetirementReportsParams } from "../../interfaces/params/retirementParams";
+import type { RetirementExportRow } from "../../interfaces/responses/retirementHistoryResponse";
+import { fetchAllPaginated } from "../../lib/excel/fetchAllPaginated";
 import { supabase } from "../../lib/supabase";
 
 // obtener los registros de bajas de productos con paginacion y filtrado
@@ -87,4 +89,24 @@ export const getLastRetirementReportDb = async () => {
 
     if (error) throw new Error(error.message);
     return data;
+};
+
+export const getRetirementReportsForExportDb = async () => {
+  return fetchAllPaginated<RetirementExportRow>(async (from, to) => {
+    const { data, error } = await supabase
+      .from('retirement_history')
+      .select(`
+        doc_reference,
+        reason,
+        type,
+        date,
+        product ( code, name, department ( code, name, responsible_name ) ),
+        user ( name, surname )
+      `)
+      .order('date', { ascending: false })
+      .range(from, to);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as RetirementExportRow[];
+  });
 };

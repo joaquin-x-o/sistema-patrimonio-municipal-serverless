@@ -17,6 +17,7 @@ import { LoadingContainer } from "../../components/ui/Feedback/LoadingContainer"
 import { useProduct } from "../../hooks/query/products/useProduct";
 import { useProductHistoryMeta } from "../../hooks/query/products/useCheckProductHistory";
 import { formatPrice } from "../../utils/common/priceFormatters";
+import { formatAreaCode } from "../../utils/common/formatAreaCode";
 
 const reportLinks = (productCode: string) => [
     { key: "maintenance", label: "Reportes de mantenimiento", to: `/reportes/mantenimiento/${productCode}` },
@@ -95,7 +96,7 @@ export default function ProductDetails() {
                 // UBICACION
                 <DetailCard
                     label="Ubicación"
-                    value={`${productDetails?.department.name} (${productDetails?.department.departmentCode})`}
+                    value={`${productDetails?.department.name} (${formatAreaCode(productDetails?.department.departmentCode ?? "", productDetails?.isLegacy ?? false)})`}
                     showEdit={isAdmin}
                     onEdit={() => navigate("/producto/transferir", { state: { productCode: productDetails?.productCode } })}
                 />,

@@ -26,7 +26,7 @@ export const MaintenanceHistoryColumnNames: ColumnDef<MaintenanceHistoryResponse
     {
         header: "Costo",
         accessorKey: "cost",
-        cell: (row) => `$${formatPrice(row.cost)}`
+        cell: (row) => `${formatPrice(row.cost)}`
     },
     {
         header: "Registrado por",

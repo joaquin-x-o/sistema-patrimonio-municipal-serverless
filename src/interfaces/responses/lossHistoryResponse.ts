@@ -11,3 +11,12 @@ export interface LossHistoryResponse {
     user: { name: string; surname: string };
 }
 
+export interface LossExportRow {
+  complaint_reference: string | null;
+  date: string;
+  type: LossType;
+  details: string | null;
+  product: { code: number; name: string; status: ProductStatus } | null;
+  user: { name: string; surname: string } | null;
+  department: { code: string; name: string; responsible_name: string } | null;
+}

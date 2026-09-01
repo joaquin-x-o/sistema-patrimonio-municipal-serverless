@@ -1,12 +1,13 @@
 import type { ProductsParams } from "../../interfaces/params/productParams";
 import type { ConditionCountResponse, ProductLightResponse } from "../../interfaces/responses/productResponses";
 import { getLogDescription } from "../../lib/logMessage/logDescriptions";
+import { mapProductsForExport } from "../../lib/maps/excel/mapProductsForExport";
 import { mapCreateProductRequestToDto, mapMarkProductAsLostToDto, mapRepairProductRequestToDto, mapRetireProductToDto, mapTransferProductRequestToDto, mapUnusuableProductRequesToDto, mapUpdateProductRequestToDto } from "../../lib/maps/requests/productRequestMapper";
 import { mapProductCountToConditionCountResponse, mapProductRowToFullResponse, mapProductRowToLightResponse, mapProductRowToShortResponse } from "../../lib/maps/responses/productResponseMapper";
 import { getDepartmentId } from "../../repositories/departments/department.repository";
 import { hasMaintenanceHistoryDb } from "../../repositories/maintenanceHistory/maintenanceHistory.repository";
 import { hasMovementHistoryDb } from "../../repositories/movementHistory/movementHistory.repository";
-import { approveReviewDb, checkProductExistenceDb, createProductDb, deleteProductDb, enableProductDb, getLastProductCodeDb, getProductByCodeDb, getProductCountByConditionDb, getProductId, getProductLastCheckDateDb, getProductListDb, getProductsByStatusDb, getProductsDb, getProductsLastCheckDateDb, getProductsNeedingCheckDb, getReviewCountsDb, markProductAsFoundDb, markProductAsLostDb, markProductUnusableDb, repairProductDb, retireProductDb, searchProductsLightDb, sendProductToReviewDb, transferProductDb, updateProductDb } from "../../repositories/products/products.repository";
+import { approveReviewDb, checkProductExistenceDb, createProductDb, deleteProductDb, enableProductDb, getLastProductCodeDb, getProductByCodeDb, getProductCountByConditionDb, getProductId, getProductLastCheckDateDb, getProductListDb, getProductsByStatusDb, getProductsDb, getProductsForExportDb, getProductsLastCheckDateDb, getProductsNeedingCheckDb, getReviewCountsDb, markProductAsFoundDb, markProductAsLostDb, markProductUnusableDb, repairProductDb, retireProductDb, searchProductsLightDb, sendProductToReviewDb, transferProductDb, updateProductDb } from "../../repositories/products/products.repository";
 import type { CreateProductRequest, LostProductRequest, MarkProductUnusableRequest, RepairProductRequest, RetireProductRequest, ReviewProductRequest, TransferProductRequest, UpdateProductRequest } from "../../schemas/product.schemas";
 import { LogActionType, LogEntityType } from "../../types/log.type";
 import { ProductStatus, type ProductFilterTab } from "../../types/product.type";
@@ -148,6 +149,17 @@ export const getProductCountByCondition = async (): Promise<ConditionCountRespon
     return data
 };
 
+// obtener productos para exportar a excel
+export const getAllProductsForExcelExport = async () => {
+  const products = await getProductsForExportDb();
+  return mapProductsForExport(products);
+};
+
+// obtener productos de un departamento para exportar a excel
+export const getProductsByDepartmentForExport = async (departmentCode: string) => {
+  const products = await getProductsForExportDb(departmentCode);
+  return mapProductsForExport(products);
+};
 
 // ACCIONES ---------------------
 
