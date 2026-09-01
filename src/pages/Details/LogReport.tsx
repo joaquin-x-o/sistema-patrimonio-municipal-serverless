@@ -7,8 +7,6 @@ import type { DateFilterOptions } from "../../types/dataFilterOptions.type";
 import { DetailsLayout } from "../../components/layout/DetailsLayout";
 import { DetailCard } from "../../components/ui/Cards/DetailCard";
 import { TableCard } from "../../components/ui/Cards/TableCard";
-import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { formatDateAR } from "../../utils/date/formattedDate";
 import { useLog } from "../../hooks/query/logHistory/useLogHistory";
@@ -122,7 +120,6 @@ export default function LogReport() {
                     }}
                 />
             ]}
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
         />
     );
 }

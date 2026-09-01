@@ -3,8 +3,6 @@ import type { ButtonGroupAction } from "../../components/ui/Button/ButtonGroup";
 import { ManagementLayout } from "../../components/layout/ManagementLayout";
 import { QuickActionsCard } from "../../components/ui/Cards/QuickActionsCard";
 import { TableCard } from "../../components/ui/Cards/TableCard";
-import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { UserColumnNames } from "../../components/features/users/userColumnNames";
 import { useUsers } from "../../hooks/query/users/useUsers";
 
@@ -38,7 +36,6 @@ export default function UserManagement() {
                     }}
                 />
             }
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
         />
     );
 }

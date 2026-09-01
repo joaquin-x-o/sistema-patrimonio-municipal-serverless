@@ -1,8 +1,9 @@
 // lossHistory.service.ts
 import type { LossHistoryResponse } from "../../interfaces/responses/lossHistoryResponse";
 import type { GetLossReportsParams } from "../../interfaces/params/lossParams";
-import { getLossReportsDb, getTotalLossReportsDb, getLastLossReportDb, getLastProductLossReportDateDb } from "../../repositories/lossHistory/lossHistory.repository";
+import { getLossReportsDb, getTotalLossReportsDb, getLastLossReportDb, getLastProductLossReportDateDb, getLossReportsForExportDb } from "../../repositories/lossHistory/lossHistory.repository";
 import { mapLossRowReportToResponse } from "../../lib/maps/responses/reportResponseMapper";
+import { mapLossesForExport } from "../../lib/maps/excel/mapLossReportForExcel";
 
 
 // obtener los registros de perdidas de productos con paginacion
@@ -41,4 +42,9 @@ export const getLastProductLossReportDate = async (productId: number): Promise<S
     } catch {
         return null;
     }
+};
+
+export const getLossesForExport= async () => {
+  const losses = await getLossReportsForExportDb();
+  return mapLossesForExport(losses);
 };

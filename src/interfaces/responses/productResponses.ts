@@ -80,3 +80,19 @@ export interface ConditionCountResponse {
     physicalCondition: ProductCondition;
     count: number;
 }
+
+// nombre de las columnas que se exportan a excel 
+export interface ProductExportRow {
+  code: number;
+  department: { code: string } | null;
+  name: string;
+  description: string | null;
+  quantity: string;
+  registration_date: string | null;
+  physical_condition: ProductCondition | null;
+  invoice_number: string | null;
+  purchase_price: number | null;
+  depreciation: number | null;
+  observation: string | null;
+  is_legacy: boolean;
+}

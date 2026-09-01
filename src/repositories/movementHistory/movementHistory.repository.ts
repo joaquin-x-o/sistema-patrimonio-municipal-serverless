@@ -1,3 +1,5 @@
+import type { MovementExportRow } from "../../interfaces/responses/movementHistoryResponse";
+import { fetchAllPaginated } from "../../lib/excel/fetchAllPaginated";
 import { supabase } from "../../lib/supabase";
 import { getProductId } from "../products/products.repository";
 
@@ -66,4 +68,27 @@ export const hasMovementHistoryDb = async (productId: number): Promise<boolean> 
 
     if (error) throw error;
     return data.length > 0;
+};
+
+// obtener todo el historial de movimientos de un producto para exportar a excel
+export const getMovementHistoryForExportDb = async (productCode: number) => {
+  const productId = await getProductId(productCode);
+
+  return fetchAllPaginated<MovementExportRow>(async (from, to) => {
+    const { data, error } = await supabase
+      .from('movement_history')
+      .select(`
+        date,
+        reason,
+        user ( name, surname ),
+        origin:origin_department_id ( code, name ),
+        destination:destination_department_id ( code, name )
+      `)
+      .eq('product_id', productId)
+      .order('date', { ascending: false })
+      .range(from, to);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as MovementExportRow[];
+  });
 };

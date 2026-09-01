@@ -1,5 +1,7 @@
 // lossHistory.repository.ts
 import type { GetLossReportsParams } from "../../interfaces/params/lossParams";
+import type { LossExportRow } from "../../interfaces/responses/lossHistoryResponse";
+import { fetchAllPaginated } from "../../lib/excel/fetchAllPaginated";
 import { supabase } from "../../lib/supabase";
 
 // obtener los registros de pérdidas de productos 
@@ -105,4 +107,25 @@ export const getLastProductLossReportDateDb = async (productId: number) => {
     if (error) throw new Error(error.message);
 
     return data?.date ?? null;
+};
+
+export const getLossReportsForExportDb = async () => {
+  return fetchAllPaginated<LossExportRow>(async (from, to) => {
+    const { data, error } = await supabase
+      .from('loss_history')
+      .select(`
+        complaint_reference,
+        date,
+        type,
+        details,
+        product ( code, name, status ),
+        user ( name, surname ),
+        department:last_department_id ( code, name, responsible_name )
+      `)
+      .order('date', { ascending: false })
+      .range(from, to);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as LossExportRow[];
+  });
 };

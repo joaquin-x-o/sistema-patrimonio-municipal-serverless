@@ -9,10 +9,10 @@ import { DetailCard } from "../../components/ui/Cards/DetailCard";
 import { TableCard } from "../../components/ui/Cards/TableCard";
 import { RetirementFilters } from "../../components/features/retirementHistory/RetirementFilters";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { RetirementHistoryColumnNames } from "../../components/features/retirementHistory/RetirementHistoryColumnNames";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { formatCalendarDateAR } from "../../utils/date/formattedDate";
+import { useExportRetirements } from "../../hooks/query/retirementHistory/useExportRetirementExport";
 
 export default function RetirementReport() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +34,9 @@ export default function RetirementReport() {
         limit: 10
     });
 
+    const { handleExportExcel, isExporting } = useExportRetirements();
+
+    const tableIsEmpty = !data || data.length === 0;
 
     const lastRetirementProduct = stats?.lastReport;
 
@@ -111,7 +114,12 @@ export default function RetirementReport() {
                     }}
                 />,
             ]}
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+
+            floatingAction={
+                !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
         />
     );
 }

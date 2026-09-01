@@ -10,6 +10,7 @@ import { FilterTabs } from "../../components/ui/Filters/FilterTabs";
 import { ReviewCard } from "../../components/ui/Cards/ReviewCard";
 import { PageTitle } from "../../components/ui/Typography/PageTitle";
 import { useReviewProducts } from "../../hooks/query/products/useReviewProducts";
+import { useExportCheckReview } from "../../hooks/query/products/actions/useExportCheckReviewProduct";
 
 export default function ReviewManagement() {
 
@@ -29,6 +30,7 @@ export default function ReviewManagement() {
     const [reviewProducts, setReviewProducts] = useState<ReviewDisplayProduct[]>([]);
 
     const { products, counts, loading, refetch } = useReviewProducts(activeTab);
+    const { handleExportExcel } = useExportCheckReview();
 
     // configuración de las pestañas
     const reviewTabs: TabOption[] = [
@@ -98,6 +100,7 @@ export default function ReviewManagement() {
             <CheckGuidelinesModal
                 isOpen={ischeckGuidelinesModalOpen}
                 onClose={() => setIsCheckGuidelinesModalOpen(false)}
+                onExport={() => handleExportExcel(reviewProducts)}
             />
         </div>
     );

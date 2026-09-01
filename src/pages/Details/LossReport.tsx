@@ -8,11 +8,11 @@ import { DetailCard } from "../../components/ui/Cards/DetailCard";
 import { TableCard } from "../../components/ui/Cards/TableCard";
 import { LossFilters } from "../../components/features/lossHistory/LossFilters";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { LossHistoryColumnNames } from "../../components/features/lossHistory/LossHistoryColumnNames";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { formatCalendarDateAR } from "../../utils/date/formattedDate";
 import { useLossReport } from "../../hooks/query/lossHistory/useLossReport";
+import { useExportLosses } from "../../hooks/query/lossHistory/useExportLossReport";
 
 export default function LossReport() {
 
@@ -34,6 +34,9 @@ export default function LossReport() {
     });
 
     const lastLostProduct = stats?.lastLossReport;
+    const tableIsEmpty = !data || data.length === 0;
+
+    const { handleExportExcel, isExporting } = useExportLosses();
 
     useEffect(() => {
         if (!loading && shouldScroll) {
@@ -103,7 +106,12 @@ export default function LossReport() {
                     }}
                 />
             ]}
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+
+            floatingAction={
+                !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
         />
     );
 }

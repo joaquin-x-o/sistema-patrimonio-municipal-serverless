@@ -5,10 +5,10 @@ import { DetailsLayout } from "../../components/layout/DetailsLayout";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { TableCard } from "../../components/ui/Cards/TableCard";
 import { ExcelButton } from "../../components/ui/Button/ExcelButton";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { MovementHistoryColumnNames } from "../../components/features/movementHistory/MovementHistoryColumnNames";
 import { useProduct } from "../../hooks/query/products/useProduct";
 import { useMovementReport } from "../../hooks/query/movementHistory/useMovementHistoryReport";
+import { useExportMovements } from "../../hooks/query/movementHistory/useExportMovementReport";
 
 export default function MovementReport() {
     const { productCode } = useParams<{ productCode: string }>();
@@ -16,6 +16,10 @@ export default function MovementReport() {
 
     const { data: productDetails } = useProduct(productCode);
     const { data, lastMovement, total, totalPages, loading } = useMovementReport(productCode, currentPage);
+
+    const { handleExportExcel, isExporting } = useExportMovements(Number(productCode), productDetails?.name || "");
+
+    const tableIsEmpty = !data || data.length === 0;
 
     return (
         <DetailsLayout
@@ -60,7 +64,12 @@ export default function MovementReport() {
                     }}
                 />,
             ]}
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+
+            floatingAction={
+                !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
         />
     );
 }

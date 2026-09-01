@@ -1,7 +1,8 @@
 import type { MovementHistoryResponse } from "../../interfaces/responses/movementHistoryResponse";
+import { mapMovementsForExport } from "../../lib/maps/excel/mapMovementReportForExcel";
 import { mapProductRowToLightResponse } from "../../lib/maps/responses/productResponseMapper";
 import { mapMovementRowReportToResponse } from "../../lib/maps/responses/reportResponseMapper";
-import { getMovementHistoryByCodeDb, getLastMovementByCodeDb, getMovementProductListDb } from "../../repositories/movementHistory/movementHistory.repository";
+import { getMovementHistoryByCodeDb, getLastMovementByCodeDb, getMovementProductListDb, getMovementHistoryForExportDb } from "../../repositories/movementHistory/movementHistory.repository";
 import type { ProductLightResponse } from "../../schemas/product.schemas";
 
 
@@ -40,4 +41,9 @@ export const getMovementProductList = async (): Promise<ProductLightResponse[]> 
     const productList = (data ?? []).map(mapProductRowToLightResponse)
 
     return productList;
+};
+
+export const getMovementsForExport = async (productCode: number) => {
+  const movements = await getMovementHistoryForExportDb(productCode);
+  return mapMovementsForExport(movements);
 };

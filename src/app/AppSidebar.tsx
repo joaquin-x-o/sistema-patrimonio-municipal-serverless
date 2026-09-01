@@ -2,10 +2,13 @@ import Sidebar from '../components/layout/sidebar/Sidebar';
 import { useAuth } from '../hooks/auth/useAuth';
 import { navigationConfig } from '../components/layout/sidebar/sidebarNavigationConfig';
 import { UserRole } from '../types/user.type';
+import { useExportFullInventory } from '../hooks/excel/exportFullInventory';
 
 export default function AppSidebar() {
     const { user } = useAuth();
     const isAdmin = user?.role === UserRole.ADMIN;
+
+    const { handleExportExcel, isExporting } = useExportFullInventory();
 
     const LOGO = import.meta.env.VITE_LOGO;
     const GOVERNMENT_NAME = import.meta.env.VITE_GOVERNMENT_NAME;
@@ -39,6 +42,15 @@ export default function AppSidebar() {
                     );
                 })}
             </div>
+
+            {/* EXCEL BUTTON */}
+            {isAdmin && (
+                <Sidebar.ExcelButton
+                    text='Exportar patrimonio'
+                    onClick={handleExportExcel}
+                    isLoading={isExporting}
+                />
+            )}
 
             {/* DANGER */}
             {isAdmin && (

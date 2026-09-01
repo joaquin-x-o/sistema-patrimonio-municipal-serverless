@@ -5,11 +5,11 @@ import { DetailCard } from "../../components/ui/Cards/DetailCard";
 import { TableCard } from "../../components/ui/Cards/TableCard";
 import { InfoField } from "../../components/ui/DataDisplay/InfoField";
 import { formatCalendarDateAR } from "../../utils/date/formattedDate";
-import { handleExportExcel } from "../../utils/common/handleExportExcel";
 import { useState } from "react";
 import { MaintenanceHistoryColumnNames } from "../../components/features/maintenanceHistory/MaintenanceHistoryColumnNames";
 import { useProduct } from "../../hooks/query/products/useProduct";
 import { useMaintenanceReport } from "../../hooks/query/maintenanceHistory/useMaintenanceReport";
+import { useExportMaintenance } from "../../hooks/query/maintenanceHistory/useExportMaintenanceReport";
 
 export default function MaintenanceReport() {
 
@@ -18,6 +18,9 @@ export default function MaintenanceReport() {
 
     const { data: productDetails } = useProduct(productCode);
     const { data, lastMaintenance, total, totalPages, loading } = useMaintenanceReport(productCode, currentPage);
+    const { handleExportExcel, isExporting } = useExportMaintenance(Number(productCode), productDetails?.name ?? "");
+
+    const tableIsEmpty = !data || data.length === 0;
 
     return (
         <DetailsLayout
@@ -64,7 +67,12 @@ export default function MaintenanceReport() {
                     }}
                 />,
             ]}
-            floatingAction={<ExcelButton onClick={handleExportExcel} />}
+
+            floatingAction={
+                !tableIsEmpty ? (
+                    <ExcelButton onClick={handleExportExcel} isLoading={isExporting} />
+                ) : undefined
+            }
         />
     );
 }

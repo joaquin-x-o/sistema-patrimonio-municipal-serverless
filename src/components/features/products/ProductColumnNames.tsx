@@ -5,6 +5,7 @@ import { categoryTranslations, conditionTranslations } from "../../../utils/dict
 import { ProductBadgeStatus } from "./status/ProductBadgeStatus";
 import { DepartmentNameFormat } from "../departments/DepartmentNameFormat";
 import { formatDateAR } from "../../../utils/date/formattedDate";
+import { formatAreaCode } from "../../../utils/common/formatAreaCode";
 
 
 export const ProductColumnNames: ColumnDef<ProductShortResponse>[] = [
@@ -17,7 +18,7 @@ export const ProductColumnNames: ColumnDef<ProductShortResponse>[] = [
         accessorKey: "department",
         cell: (row) => (
             <DepartmentNameFormat
-                departmentCode={row.department.departmentCode}
+                departmentCode={formatAreaCode(row.department.departmentCode, row.isLegacy)}
                 name={row.department.name}
             />
         )

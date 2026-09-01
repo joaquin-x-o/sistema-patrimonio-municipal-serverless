@@ -5,6 +5,8 @@ import type { CreateProductDto, LostProductDto, RepairProductDto, RetireProductD
 import type { ReviewProductRequest } from "../../schemas/product.schemas";
 import { ProductStatus } from "../../types/product.type";
 import { getTodayDateISO } from "../../utils/date/getTodayDate";
+import { fetchAllPaginated } from "../../lib/excel/fetchAllPaginated";
+import type { ProductExportRow } from "../../interfaces/responses/productResponses";
 
 
 // CONSULTAS ----------------------------------
@@ -253,6 +255,39 @@ export const getProductLastCheckDateDb = async (productId: number) => {
 
     if (error) throw error;
     return data;
+};
+
+// obtener productos para exportar a excel (todos, o filtrados por área)
+export const getProductsForExportDb = async (departmentCode?: string) => {
+  return fetchAllPaginated<ProductExportRow>(async (from, to) => {
+    let query = supabase
+      .from('product')
+      .select(`
+        code,
+        name,
+        description,
+        quantity,
+        registration_date,
+        physical_condition,
+        invoice_number,
+        purchase_price,
+        depreciation,
+        observation,
+        is_legacy,
+        department !inner ( code )
+      `)
+      .order('code', { ascending: true })
+      .order('product_id', { ascending: true })
+      .range(from, to);
+
+    if (departmentCode) {
+      query = query.eq('department.code', departmentCode);
+    }
+
+    const { data, error } = await query;
+    if (error) throw new Error(error.message);
+    return (data ?? []) as unknown as ProductExportRow[];
+  });
 };
 
 // ACCIONES ----------------------------------------
