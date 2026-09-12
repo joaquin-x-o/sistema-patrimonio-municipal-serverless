@@ -3,6 +3,8 @@
 ## Identificación
 * **Proyecto:** Sistema de Control de Patrimonio.
 
+* <img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/86721105-d7a0-412d-81e0-847b1204dd20" />
+
 ## Descripción técnica
 El presente proyecto consiste en el desarrollo del frontend para una aplicación web destinada a gestionar el patrimonio de un gobierno de escala municipal. El sistema se define como una plataforma de uso estrictamente interno. Se trata de un back office diseñado de manera exclusiva para operar dentro del entorno institucional de la municipalidad. 
 
